@@ -15,7 +15,7 @@ wss.on('connection', function connection(ws) {
     console.log('received: %s', message);
 
     wss.clients.forEach(client => {
-      if ( client !== ws && client.readyState === WebSocket.OPEN) {
+      if ( /*client !== ws && */client.readyState === WebSocket.OPEN) {
         client.send("Go TEAM!");
       }
     })
