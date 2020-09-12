@@ -1,7 +1,26 @@
-var http = require('http');
+const WebSocket = require('ws');
 
-//create a server object:
-http.createServer(function (req, res) {
-  res.write('Hello World!'); //write a response to the client
-  res.end(); //end the response
-}).listen(80); //the server object listens on port 8080
+const port = 9789;
+const wss = new WebSocket.Server({port});
+
+const threads = {};
+
+wss.on('connection', function connection(ws) {
+
+  console.log("Initiated new connection with client");
+
+  ws.send("Connected to Avonet");
+
+  ws.on('message', message => {
+    console.log('received: %s', message);
+
+    wss.clients.forEach(client => {
+      if ( client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send("Go TEAM!");
+      }
+    })
+  });
+
+});
+
+console.log("Listening on " + port);
